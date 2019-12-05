@@ -31,11 +31,13 @@ class Notes extends Component {
     //     const { text } = this.state;
     //     console.log(text)
     // }
-    handleSubmit() {
-        const newNote = document.querySelector('input').value;
-        console.log(newNote);
-        // this.props.submitNote(newNote)
-        console.log(this.props)
+    handleSubmit(props) {
+        const text = document.querySelector('input').value;
+        const newNote = {
+            text,
+        };
+        props.submitNote(newNote);
+        document.querySelector('input').value = '';
     }
     delete(id, props) {
         props.deleteNote(id);
@@ -49,22 +51,7 @@ class Notes extends Component {
                         this.props.notes.map(note => <li key={note.id}>{ note.text }<button onClick={() => this.delete(note.id, this.props)}>X</button></li>)
                     }
                 </ul>
-                {/* <input type="text" name="newNote" /> <button onClick={this.handleSubmit}>Create Note</button> */}
-                <input type="text" name="newNote" />
-                <button onClick={
-                    () => {
-                        const text = document.querySelector('input').value;
-                        // console.log(newNote);
-                        const newNote = {
-                            text,
-                        }
-                        this.props.submitNote(newNote)
-                        document.querySelector('input').value = ''
-                    }
-                }>
-                
-                Create Note</button>
-
+                <input type="text" name="newNote" /> <button onClick={() => this.handleSubmit(this.props)}>Create Note</button>
             </div>
         )
     }

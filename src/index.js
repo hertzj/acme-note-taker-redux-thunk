@@ -37,10 +37,12 @@ const NEWNOTE = 'NEWNOTE'
 //action creators
 const setAuth = (auth)=> ({ type: SET_AUTH, auth });
 const setNotes = (notes)=> ({ type: SET_NOTES, notes });
-const newNote = () => ({
-  type: NEWNOTE,
-  // something
-})
+
+// don't understand why I need action creators for posting and deleting
+// const newNote = () => ({
+//   type: NEWNOTE,
+//   // something
+// })
 
 //thunks
 const getAuth = ()=> {
