@@ -39,6 +39,7 @@ const setAuth = (auth)=> ({ type: SET_AUTH, auth });
 const setNotes = (notes)=> ({ type: SET_NOTES, notes });
 const newNote = () => ({
   type: NEWNOTE,
+  // something
 })
 
 //thunks
@@ -57,9 +58,12 @@ const getNotes = ()=> {
   };
 };
 
-const createdNotes = () => {
+const createNote = (note) => {
   return async(dispatch, getState) => {
-
+    // console.log(note);
+    await axios.post(`${API}/users/${getState().auth.id}/notes`, note);
+    const notes = (await axios.get(`${API}/users/${getState().auth.id}/notes`)).data;
+    return dispatch(setNotes(notes))
   }
 }
 
@@ -77,7 +81,7 @@ const store = createStore(
         return action.notes;
       }
       if (action.type === NEWNOTE) {
-        return 
+        return action.notes;
       }
       return state;
     }
@@ -135,4 +139,4 @@ const App = connect(({ auth })=> {
 const root = document.querySelector('#root');
 render(<Provider store={ store }><App /></Provider>, root);
 
-export default store;
+export { createNote };
