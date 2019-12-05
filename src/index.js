@@ -31,16 +31,22 @@ import axios from 'axios';
 //constants
 const SET_AUTH = 'SET_AUTH';
 const SET_NOTES = 'SET_NOTES';
-const NEWNOTE = 'NEWNOTE'
+const NEW_NOTE = 'NEW_NOTE'
+const DELETE_NOTE = 'DELETE_NOTE'
 
 
 //action creators
 const setAuth = (auth)=> ({ type: SET_AUTH, auth });
 const setNotes = (notes)=> ({ type: SET_NOTES, notes });
 
-const newNote = (note) => ({
-  type: NEWNOTE,
+const newNote = note => ({
+  type: NEW_NOTE,
   note,
+});
+
+const removeNote = id => ({
+  type: DELETE_NOTE,
+  id,
 })
 
 //thunks
@@ -61,16 +67,15 @@ const getNotes = ()=> {
 
 const createNote = (note) => {
   return async(dispatch, getState) => {
-    await axios.post(`${API}/users/${getState().auth.id}/notes`, note);
-    return dispatch(newNote(note));
+    const postedNote = (await axios.post(`${API}/users/${getState().auth.id}/notes`, note)).data;
+    return dispatch(newNote(postedNote));
   }
 }
 
 const deleteNote = id => {
   return async (dispatch, getState) => {
     await axios.delete(`${API}/users/${getState().auth.id}/notes/${id}`);
-    const notes = (await axios.get(`${API}/users/${getState().auth.id}/notes`)).data;
-    return dispatch(setNotes(notes));
+    return dispatch(removeNote(id));
   }
 }
 
@@ -87,9 +92,14 @@ const store = createStore(
       if(action.type === SET_NOTES){
         return action.notes;
       }
-      if (action.type === NEWNOTE) {
+      if (action.type === NEW_NOTE) {
         const note = action.note
         return [...state, note]
+      }
+      if (action.type === DELETE_NOTE) {
+        const id = action.id;
+        const newState = state.filter(note => note.id !== id);
+        return newState;
       }
       return state;
     }
