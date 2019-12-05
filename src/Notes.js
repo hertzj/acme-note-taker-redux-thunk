@@ -22,9 +22,9 @@ import { createNote, deleteNote } from './index.js';
 class Notes extends Component {
     constructor(props) {
         super()
-        // this.state = {
-        //     text: '',
-        // }
+        this.state = {
+            invalidSubmit: false,
+        }
     }
     // handleChange() {
     //     let newText = document.querySelector('input').value;
@@ -32,6 +32,10 @@ class Notes extends Component {
     //     console.log(text)
     // }
     handleSubmit(props) {
+        if (props.notes.length === 5) {
+            this.setState({invalidSubmit: true});
+            return;
+        }
         const text = document.querySelector('input').value;
         const newNote = {
             text,
@@ -41,9 +45,11 @@ class Notes extends Component {
     }
     delete(id, props) {
         props.deleteNote(id);
+        if (props.notes.length <= 5) {
+            this.setState({invalidSubmit: false});
+        }
     }
     render() {
-        // console.log(this.props);
         return (
             <div>
                 <ul>
@@ -51,6 +57,9 @@ class Notes extends Component {
                         this.props.notes.map(note => <li key={note.id}>{ note.text }<button onClick={() => this.delete(note.id, this.props)}>X</button></li>)
                     }
                 </ul>
+                {
+                    this.state.invalidSubmit && <span>user can only have a max of five notes</span> 
+                }
                 <input type="text" name="newNote" /> <button onClick={() => this.handleSubmit(this.props)}>Create Note</button>
             </div>
         )
