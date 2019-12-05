@@ -67,6 +67,14 @@ const createNote = (note) => {
   }
 }
 
+const deleteNote = id => {
+  return async (dispatch, getState) => {
+    await axios.delete(`${API}/users/${getState().auth.id}/notes/${id}`);
+    const notes = (await axios.get(`${API}/users/${getState().auth.id}/notes`)).data;
+    return dispatch(setNotes(notes));
+  }
+}
+
 //store
 const store = createStore(
   combineReducers({
@@ -139,4 +147,4 @@ const App = connect(({ auth })=> {
 const root = document.querySelector('#root');
 render(<Provider store={ store }><App /></Provider>, root);
 
-export { createNote };
+export { createNote, deleteNote };

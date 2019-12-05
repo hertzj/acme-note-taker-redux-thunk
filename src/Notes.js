@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { createNote } from './index.js';
+import { createNote, deleteNote } from './index.js';
 
 
 // eslint-disable-next-line react/require-render-return
@@ -37,13 +37,16 @@ class Notes extends Component {
         // this.props.submitNote(newNote)
         console.log(this.props)
     }
+    delete(id, props) {
+        props.deleteNote(id);
+    }
     render() {
         // console.log(this.props);
         return (
             <div>
                 <ul>
                     {
-                        this.props.notes.map(note => <li key={note.id}>{ note.text }</li>)
+                        this.props.notes.map(note => <li key={note.id}>{ note.text }<button onClick={() => this.delete(note.id, this.props)}>X</button></li>)
                     }
                 </ul>
                 {/* <input type="text" name="newNote" /> <button onClick={this.handleSubmit}>Create Note</button> */}
@@ -76,7 +79,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        submitNote: (newNote) => dispatch(createNote(newNote)) // need to import
+        submitNote: (newNote) => dispatch(createNote(newNote)),
+        deleteNote: (id) => dispatch(deleteNote(id)),
     }
 }
 
