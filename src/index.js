@@ -62,7 +62,6 @@ const getNotes = ()=> {
 
 const createNote = (note) => {
   return async(dispatch, getState) => {
-    // console.log(note);
     await axios.post(`${API}/users/${getState().auth.id}/notes`, note);
     const notes = (await axios.get(`${API}/users/${getState().auth.id}/notes`)).data;
     return dispatch(setNotes(notes))
