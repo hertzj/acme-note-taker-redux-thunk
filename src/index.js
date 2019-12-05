@@ -38,11 +38,10 @@ const NEWNOTE = 'NEWNOTE'
 const setAuth = (auth)=> ({ type: SET_AUTH, auth });
 const setNotes = (notes)=> ({ type: SET_NOTES, notes });
 
-// don't understand why I need action creators for posting and deleting
-// const newNote = () => ({
-//   type: NEWNOTE,
-//   // something
-// })
+const newNote = (note) => ({
+  type: NEWNOTE,
+  note,
+})
 
 //thunks
 const getAuth = ()=> {
@@ -63,8 +62,7 @@ const getNotes = ()=> {
 const createNote = (note) => {
   return async(dispatch, getState) => {
     await axios.post(`${API}/users/${getState().auth.id}/notes`, note);
-    const notes = (await axios.get(`${API}/users/${getState().auth.id}/notes`)).data;
-    return dispatch(setNotes(notes))
+    return dispatch(newNote(note));
   }
 }
 
@@ -90,7 +88,8 @@ const store = createStore(
         return action.notes;
       }
       if (action.type === NEWNOTE) {
-        return action.notes;
+        const note = action.note
+        return [...state, note]
       }
       return state;
     }

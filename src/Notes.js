@@ -17,6 +17,7 @@ class Notes extends Component {
         }
         const text = document.querySelector('input').value;
         const newNote = {
+            id: Math.random(),
             text,
         };
         props.submitNote(newNote);
